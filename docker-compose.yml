@@ -1,0 +1,26 @@
+version: "3.1"
+services:
+  db:
+    image: postgres
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=receipts
+    ports:
+      - "5432:5432"
+  server:
+    build: ./server
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./server:/server
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=receipts
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - db
