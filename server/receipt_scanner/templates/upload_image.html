@@ -1,0 +1,7 @@
+<h2>Upload image of receipt</h2>
+<form method="POST" action="scan/">
+    {% csrf_token %}
+    Choose image to upload
+    <input type="file" name="image" accept="image/*"><br/>
+    <button type="submit">Submit</button>
+</form>

@@ -1,6 +1,5 @@
-from django.http import HttpResponse
-from django.urls import reverse_lazy
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy, reverse
 from django.template import loader
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
@@ -15,8 +14,14 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
 
-def scan(request):
-    pass
+def upload_receipt(request):
+    template = loader.get_template('upload_image.html')
+    return HttpResponse(template.render({}, request))
 
 def view(request):
     pass
+
+def scan(request):
+    img = request.POST["image"]
+    # machine learning stuff
+    return HttpResponseRedirect(reverse('index'))
