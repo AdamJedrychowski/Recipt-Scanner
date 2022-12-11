@@ -5,4 +5,10 @@ class Shopping(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE),
     date = models.DateField()
     place = models.CharField(max_length=50)
-    bought = models.CharField(max_length=1000)
+    full_price = models.DecimalField(max_digits=9, decimal_places=2)
+
+
+class Items(models.Model):
+    shopping = models.ForeignKey(Shopping, on_delete=models.CASCADE),
+    item = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=9, decimal_places=2)

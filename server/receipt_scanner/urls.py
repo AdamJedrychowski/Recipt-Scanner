@@ -8,4 +8,5 @@ urlpatterns = [
     path("upload_receipt/", views.upload_receipt, name="upload_receipt"),
     path("upload_receipt/scan/", views.scan, name="scan"),
     path("view/", views.view, name="view"),
+    path("view/purchase", views.purchase, name="purchase"),
 ]

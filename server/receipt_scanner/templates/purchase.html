@@ -1,0 +1,16 @@
+{% extends 'view_shopping.html' %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>Item</th>
+            <th>Price</th>
+        </tr>
+        {% for x in items %}
+            <tr>
+                <td>{{ x.item }}</td>
+                <td>{{ x.price }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}
