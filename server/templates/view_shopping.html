@@ -1,20 +1,20 @@
+{% include "head.html" %} {% include "navbar.html" %}
 <h1>Shopping</h1>
 
 <table>
-    <tr>
-        <th>Nr</th>
-        <th>Date</th>
-        <th>Where</th>
-        <th>Full Price</th>
-    </tr>
-    {% for x in shop %}
-        <tr>
-            <td><a href="{% url 'purchase' x.id %}">{{ forloop.counter }}</a></td>
-            <td>{{ x.date }}</td>
-            <td>{{ x.place }}</td>
-            <td>{{ x.full_price }}</td>
-        </tr>
-    {% endfor %}
+  <tr>
+    <th>Nr</th>
+    <th>Date</th>
+    <th>Where</th>
+    <th>Full Price</th>
+  </tr>
+  {% for x in shop %}
+  <tr>
+    <td><a href="{% url 'purchase' x.id %}">{{ forloop.counter }}</a></td>
+    <td>{{ x.date }}</td>
+    <td>{{ x.place }}</td>
+    <td>{{ x.full_price }}</td>
+  </tr>
+  {% endfor %}
 </table>
-{% block content %}
-{% endblock %}
+{% block content %} {% endblock %}

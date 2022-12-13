@@ -1,6 +1,6 @@
-<h2>Sign up</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign up</button>
+{% include "head.html" %} {% include "navbar.html" %}
+<form method="post" class="sign-form">
+  <h2>Sign up</h2>
+  {% csrf_token %} {{ form.as_table }}
+  <button type="submit" class="btn btn-primary submit-btn">Sign up</button>
 </form>
