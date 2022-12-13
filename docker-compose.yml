@@ -4,23 +4,32 @@ services:
     image: postgres
     restart: always
     volumes:
-      - ./data/db:/var/lib/postgresql/data
+      - ./data/db_data:/var/lib/postgresql/data
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=receipts
     ports:
       - "5432:5432"
+    networks:
+      - app
   server:
     build: ./server
+    restart: always
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./server:/server
-    ports:
-      - "8000:8000"
     environment:
       - POSTGRES_NAME=receipts
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    ports:
+      - "8000:8000"
+    networks:
+      - app
     depends_on:
       - db
+
+networks:
+  app:
+    driver: bridge
