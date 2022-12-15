@@ -1,7 +1,21 @@
-{% include "head.html" %} {% include "navbar.html" %}
-<h2>Upload image of receipt</h2>
-<form method="POST" action="scan/">
-  {% csrf_token %} Choose image to upload
-  <input type="file" name="image" accept="image/*" /><br />
-  <button type="submit">Submit</button>
-</form>
+{% include "navbar.html" %} {% load static %}
+<head>
+  {% include "head.html" %}
+  <title>Upload receipt</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+</head>
+<body>
+  <form method="POST" action="scan/" class="sign-form">
+    <h2>Upload image of receipt</h2>
+    {% csrf_token %}
+    <label for="formFile" class="form-label">Choose image to upload</label>
+    <input
+      type="file"
+      name="image"
+      accept="image/*"
+      id="formFile"
+      class="form-control-file"
+    />
+    <button type="submit" class="btn btn-primary submit-btn">Submit</button>
+  </form>
+</body>

@@ -1,6 +1,13 @@
-{% include "head.html" %} {% include "navbar.html" %}
-<form method="post" class="sign-form">
-  <h2>Log In</h2>
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit" class="btn btn-primary submit-btn">Log In</button>
-</form>
+{% include "navbar.html" %} {% load static %}
+<head>
+  {% include "head.html" %}
+  <title>Login</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+</head>
+<body>
+  <form method="post" class="sign-form">
+    <h2>Log In</h2>
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="btn btn-primary submit-btn">Log In</button>
+  </form>
+</body>
