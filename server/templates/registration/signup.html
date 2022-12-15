@@ -1,4 +1,9 @@
-{% include "head.html" %} {% include "navbar.html" %}
+{% include "navbar.html" %} {% load static %}
+<head>
+    {% include "head.html" %}
+    <title>Sign up</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+</head>
 <form method="post" class="sign-form">
     <h2>Sign up</h2>
     {% csrf_token %} {{ form.as_table }}

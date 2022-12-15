@@ -1,0 +1,27 @@
+.sign-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.sign-form h2 {
+    margin-bottom: .5em;
+}
+
+.sign-form label {
+    display: block;
+    text-align: center;
+}
+
+.helptext {
+    display: block;
+}
+
+.submit-btn {
+    margin-top: .5em;
+}
+
+#formFile {
+    cursor: pointer;
+}
