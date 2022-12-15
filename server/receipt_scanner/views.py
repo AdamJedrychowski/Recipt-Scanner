@@ -1,9 +1,11 @@
+from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy, reverse
 from django.template import loader
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
-from .models import Shopping, Items
+from .models import Shopping, Item, Receipt
+from .forms import ImageForm
 
 
 def index(request):
@@ -16,8 +18,17 @@ class SignUpView(generic.CreateView):
     template_name = "registration/signup.html"
 
 def upload_receipt(request):
-    template = loader.get_template('upload_image.html')
-    return HttpResponse(template.render({}, request))
+    if request.method == "POST":
+        form = ImageForm(request.POST, request.FILES)
+        if form.is_valid():
+            img = form.cleaned_data.get("receipt_image")
+            obj = Receipt(img = img)
+            obj.save()
+            print(obj)
+    else:
+        form = ImageForm()
+    ctx = {"form": form}
+    return render(request, "upload_image.html", ctx)
 
 def view(request):
     shop = Shopping.objects.filter(user__pk=request.user.pk).values()
@@ -25,14 +36,15 @@ def view(request):
     context = { 'shop': shop }
     return HttpResponse(template.render(context, request))
 
-def scan(request):
-    img = request.POST["image"]
-    # machine learning stuff
-    return HttpResponseRedirect(reverse('index'))
+# def scan(request):
+
+#     # machine learning stuff
+#     print(request.POST.keys())
+#     return HttpResponseRedirect(reverse('index'))
 
 def purchase(request, id):
     shop = Shopping.objects.filter(user__pk=request.user.pk).values()
-    items = Items.objects.filter(shopping__id=id).values()
+    items = Item.objects.filter(shopping__id=id).values()
     template = loader.get_template('view_shopping.html')
     context = { 'shop': shop, 'items': items }
     return HttpResponse(template.render(context, request))

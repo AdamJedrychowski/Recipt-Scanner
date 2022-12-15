@@ -1,6 +1,6 @@
 {% include "head.html" %} {% include "navbar.html" %}
 <form method="post" class="sign-form">
-  <h2>Log In</h2>
-  {% csrf_token %} {{ form.as_p }}
-  <button type="submit" class="btn btn-primary submit-btn">Log In</button>
+    <h2>Log In</h2>
+    {% csrf_token %} {{ form.as_p }}
+    <button type="submit" class="btn btn-primary submit-btn">Log In</button>
 </form>

@@ -8,7 +8,14 @@ class Shopping(models.Model):
     full_price = models.DecimalField(max_digits=9, decimal_places=2)
 
 
-class Items(models.Model):
+class Item(models.Model):
     shopping = models.ForeignKey(Shopping, on_delete=models.CASCADE),
     item = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=9, decimal_places=2)
+
+class Receipt(models.Model):
+    #TODO
+    img = models.ImageField(upload_to= "receiptImages/")
+
+    def __str__(self):
+        return "receiptPhoto"

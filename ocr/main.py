@@ -52,7 +52,7 @@ def findDocumentContour(img):
     imgBlur = cv2.GaussianBlur(imgGray, (5,5), 0)
     #calculates threshold of image using Otsu method
     _, threshold = cv2.threshold(imgBlur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    # threshold = cv2.erode(threshold, np.ones((5,5), np.uint8))
+    threshold = cv2.erode(threshold, np.ones((5,5), np.uint8))
 
     #contours are lists of points that make a contour
     contours, _ = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)

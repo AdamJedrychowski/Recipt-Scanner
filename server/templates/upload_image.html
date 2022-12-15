@@ -1,7 +1,18 @@
 {% include "head.html" %} {% include "navbar.html" %}
+
 <h2>Upload image of receipt</h2>
-<form method="POST" action="scan/">
-  {% csrf_token %} Choose image to upload
-  <input type="file" name="image" accept="image/*" /><br />
-  <button type="submit">Submit</button>
+<div id="webcam-photo" style="display: flex">
+    <video id="webcam" autoplay></video>
+    <canvas id="canvas" style="display: none"></canvas>
+    <img id="photo" alt="Screen capture will appear here" />
+</div>
+<button id="take-photo-button">Take photo</button>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %} {{form.as_p}}
+    <input type="submit" value="Submit" />
 </form>
+
+{% load static %}
+<style src="{% static 'css/style.css' %}"></style>
+<script src="{% static 'js/webcam.js' %}"></script>
