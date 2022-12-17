@@ -6,6 +6,7 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from .models import Shopping, Item, Receipt
 from .forms import ImageForm
+from django.contrib.auth import get_user_model
 
 
 def index(request):
@@ -31,7 +32,7 @@ def upload_receipt(request):
     return render(request, "upload_image.html", ctx)
 
 def view(request):
-    shop = Shopping.objects.filter(user__pk=request.user.pk).values()
+    shop = Shopping.objects.filter(user_pk=request.user.pk).values()
     template = loader.get_template('view_shopping.html')
     context = { 'shop': shop }
     return HttpResponse(template.render(context, request))

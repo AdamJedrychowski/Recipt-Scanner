@@ -11,13 +11,15 @@
         <th>Where</th>
         <th>Full Price</th>
     </tr>
-    {% for x in shop %}
-        <tr>
-            <td><a href="{% url 'purchase' x.id %}">{{ forloop.counter }}</a></td>
-            <td>{{ x.date }}</td>
-            <td>{{ x.place }}</td>
-            <td>{{ x.full_price }}</td>
-        </tr>
-    {% endfor %}
+    {% if narratives.narrative_text|length > 0 %}
+        {% for x in shop %}
+            <tr>
+                <td><a href="{% url 'purchase' x.id %}">{{ forloop.counter }}</a></td>
+                <td>{{ x.date }}</td>
+                <td>{{ x.place }}</td>
+                <td>{{ x.full_price }}</td>
+            </tr>
+        {% endfor %}
+    {% endif %}
 </table>
 {% block content %} {% endblock %}
