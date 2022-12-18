@@ -1,32 +1,51 @@
 #method-select-btns {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    margin-bottom: 1em;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin-bottom: 1em;
 }
 
 #upload-method-selector h2 {
-    text-align: center;
-    margin: 1em;
+  text-align: center;
+  margin: 1em;
 }
 
 #upload-photo-container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 #upload-photo-container .submit-btn {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 #upload-photo-container form {
-    margin-top: 1.5em;
+  margin-top: 1.5em;
 }
 
 #take-photo-container {
-    display: none;
+  display: none;
+}
+
+#webcam-photo {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+#upload-photo-container .submit-btn {
+  display: block;
+  margin: 0 auto;
+}
+
+#upload-photo-container form {
+  margin-top: 1.5em;
+}
+
+#take-photo-container {
+  display: none;
 }
 
 #webcam-photo {
@@ -49,6 +68,11 @@
 }
 
 #take-photo-button {
-    display: block;
-    margin: 1em auto;
+  display: block;
+  margin: 1em auto;
+}
+
+#take-photo-button {
+  display: block;
+  margin: 1em auto;
 }
