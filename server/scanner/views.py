@@ -28,7 +28,7 @@ def upload_receipt(request):
             obj = Receipt(img = img)
             obj.save()
             print(obj)
-            context = scan("receiptImages/receipt.jpg")
+            context = scan("/server/receiptImages/" + img.name)
             return render(request, "items_list.html", context)
     else:
         form = ImageForm()
