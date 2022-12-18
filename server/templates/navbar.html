@@ -1,8 +1,4 @@
-{% load static %}
 {% block navbar %}
-    <head>
-        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
-    </head>
     <nav class="navbar navbar-expand-lg navbar-light bg-light justify-content-between">
         <a class="navbar-brand" href="/">Receipt scanner</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -14,7 +10,7 @@
                     <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
                 </li>
                 <li><a class="nav-link" href="{% url 'upload_receipt' %}">Scan without login</a></li>
-            </div>
+            </ul>
             <div class="collapse navbar-collapse justify-content-end" id="navbarCollapse">
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
@@ -27,5 +23,6 @@
                     {% endif %}
                 </ul>
             </div>
-        </nav>
+        </div>
+    </nav>
 {% endblock %}

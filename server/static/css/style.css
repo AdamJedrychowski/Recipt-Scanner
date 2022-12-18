@@ -21,15 +21,3 @@
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
-
-#webcam {
-  width: 50%;
-  height: 50%;
-}
-#photo {
-  width: 50%;
-}
-#canvas {
-  width: 50%;
-  height: 50%;
-}

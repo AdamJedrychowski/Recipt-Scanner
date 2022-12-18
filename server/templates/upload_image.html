@@ -1,18 +1,24 @@
-{% include "head.html" %} {% include "navbar.html" %}
-
-<h2>Upload image of receipt</h2>
-<div id="webcam-photo" style="display: flex">
-    <video id="webcam" autoplay></video>
-    <canvas id="canvas" style="display: none"></canvas>
-    <img id="photo" alt="Screen capture will appear here" />
-</div>
-<button id="take-photo-button">Take photo</button>
-
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %} {{form.as_p}}
-    <input type="submit" value="Submit" />
-</form>
-
 {% load static %}
-<style src="{% static 'css/style.css' %}"></style>
-<script src="{% static 'js/webcam.js' %}"></script>
+<head>
+  {% include "head.html" %}
+  <title>Upload image</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}" />
+</head>
+<body>
+  {% include "navbar.html" %}
+  <main>
+    <h2>Upload image of receipt</h2>
+    <div id="webcam-photo" style="display: flex">
+      <video id="webcam" autoplay></video>
+      <canvas id="canvas" style="display: none"></canvas>
+      <img id="photo" alt="Screen capture will appear here" />
+    </div>
+    <button id="take-photo-button" class="btn btn-primary">Take photo</button>
+
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %} {{form.as_p}}
+      <input type="submit" value="Submit" class="btn btn-primary"/>
+    </form>
+  </main>
+  <script src="{% static 'js/webcam.js' %}"></script>
+</body>

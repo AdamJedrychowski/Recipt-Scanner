@@ -1,0 +1,18 @@
+#webcam-photo {
+    display: flex;
+}
+
+#webcam {
+    width: 50%;
+    height: 50%;
+}
+
+#photo {
+    width: 50%;
+}
+
+#canvas {
+    display: none;
+    width: 50%;
+    height: 50%;
+}
