@@ -36,10 +36,6 @@ def upload_receipt(request):
     return render(request, "upload_image.html", ctx)
 
 def view(request):
-    # Shopping(user=request.user, date=datetime.date(1997, 10, 19), place='there', full_price=1234).save()
-    # cursor = Shopping
-    # cursor.execute('''SELECT * FROM Shopping S, User U WHERE S.user_id = U.id''')
-    # shop = cursor.fetchone()
     shop = Shopping.objects.filter(user_id=request.user.id).values()
     template = loader.get_template('view_shopping.html')
     context = { 'shop': shop }

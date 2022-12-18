@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /server
 COPY requirements.txt /server/
 RUN apt update && apt install -y tesseract-ocr
+RUN apt install tesseract-ocr-pol
 RUN pip install --upgrade pip
 RUN apt install -y libgl1-mesa-glx
 RUN pip install -r requirements.txt

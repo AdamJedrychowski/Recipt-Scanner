@@ -75,12 +75,15 @@ def scan(image):
     documentContour, imgThreshold = findDocumentContour(img_copy)
     imgThreshold = cv2.drawContours(cv2.cvtColor(imgThreshold, cv2.COLOR_GRAY2BGR), [documentContour], -1, (0,255,0), 3)
     
+    # cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
+    
     imgWarped = four_point_transform(img_copy, documentContour.reshape(4,2))
     
+    # cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
+    
+    
     options = "--psm 6"
-    data = pytesseract.image_to_string(
-	cv2.cvtColor(imgWarped, cv2.COLOR_BGR2RGB),
-	config=options)
+    data = pytesseract.image_to_string(cv2.cvtColor(imgWarped, cv2.COLOR_BGR2RGB), lang='pol', config=options)
     
     company_name = data.split("\n")[0]
     
@@ -90,7 +93,7 @@ def scan(image):
     dateRegex = r'([0-9]{4}\-[0-9]{2}\-[0-9]{2})'
     date= ""
     
-    priceRegex = r'([0-9]+\,[0-9]+)'
+    priceRegex = r'([0-9]+\,|\.[0-9]+)'
     items = []
     
     for row in data.split("\n"):
@@ -102,7 +105,7 @@ def scan(image):
         # Skipping lines that contain string 'SUMA PLN'  
         if 'SUMA' in row:
             total_index = data.index('SUMA')
-            total_value = float(data[total_index + 8].replace(',', '.')) # from 'S' it takes 8 characters to get to the value of total price
+            total_value = data[total_index + 8].replace(',', '.') # from 'S' it takes 8 characters to get to the value of total price
             
         # Looking for rows containing prices
         match = re.search(priceRegex, row)
@@ -110,9 +113,9 @@ def scan(image):
             words = row.split()
             price_index = words.index(match.group())
             description = ' '.join(words[:price_index])
-            price = float(match.group()[1:].replace(',', '.'))
+            price = match.group()[1:].replace(',', '.')
             items.append({'description': description, 'price': price})
             
-    context = {'company': company_name, 'address': address, 'date': date, 'items': items}
+    context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items}
 
     return context
