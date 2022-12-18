@@ -22,9 +22,12 @@ function takePhoto(photo, canvas, video, width, height) {
     const imageUploader = document.getElementById("id_receipt_image");
     imageUploader.files = container.files;
   }, "image/png");
+  
+  document.getElementById("take-photo-button").style.display = "flex";
 }
 
 (main = async () => {
+  const videoPhotoSection = document.getElementById("webcam-photo");
   const video = document.getElementById("webcam");
   const photo = document.getElementById("photo");
   const canvas = document.getElementById("canvas");
@@ -35,9 +38,10 @@ function takePhoto(photo, canvas, video, width, height) {
     video: videoSize,
   };
   let stream = null;
-  try {
+  videoPhotoSection.style.display = "None";
+    try {
     stream = await navigator.mediaDevices.getUserMedia(videoConstraints);
-  } catch {
+  } catch(err) {
     console.error(`${err.name}: ${err.message}`);
     return null;
   }
@@ -45,7 +49,6 @@ function takePhoto(photo, canvas, video, width, height) {
   video.onloadedmetadata = () => {
     video.play();
   };
-
   takePhotoButton.addEventListener(
     "click",
     (e) => {
