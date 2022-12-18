@@ -7,6 +7,7 @@ from django.contrib.auth.forms import UserCreationForm
 from .models import Shopping, Item, Receipt
 from .forms import ImageForm
 from django.contrib.auth import get_user_model
+import datetime
 
 
 def index(request):
@@ -32,7 +33,11 @@ def upload_receipt(request):
     return render(request, "upload_image.html", ctx)
 
 def view(request):
-    shop = Shopping.objects.filter(user_pk=request.user.pk).values()
+    # Shopping(user=request.user, date=datetime.date(1997, 10, 19), place='there', full_price=1234).save()
+    # cursor = Shopping
+    # cursor.execute('''SELECT * FROM Shopping S, User U WHERE S.user_id = U.id''')
+    # shop = cursor.fetchone()
+    shop = Shopping.objects.filter(user_id=request.user.id).values()
     template = loader.get_template('view_shopping.html')
     context = { 'shop': shop }
     return HttpResponse(template.render(context, request))
@@ -44,8 +49,8 @@ def view(request):
 #     return HttpResponseRedirect(reverse('index'))
 
 def purchase(request, id):
-    shop = Shopping.objects.filter(user__pk=request.user.pk).values()
-    items = Item.objects.filter(shopping__id=id).values()
-    template = loader.get_template('view_shopping.html')
+    shop = Shopping.objects.filter(user_id=request.user.id).values()
+    items = Item.objects.filter(shopping_id=id).values()
+    template = loader.get_template('purchase.html')
     context = { 'shop': shop, 'items': items }
     return HttpResponse(template.render(context, request))

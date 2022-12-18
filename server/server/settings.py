@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'receipt_scanner.apps.ReceiptScannerConfig'
+    'scanner.apps.ReceiptScannerConfig'
 ]
 
 MIDDLEWARE = [

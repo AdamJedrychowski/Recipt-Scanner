@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('item', models.CharField(max_length=50)),
                 ('price', models.DecimalField(decimal_places=2, max_digits=9)),
-                ('shopping', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='receipt_scanner.shopping')),
+                ('shopping', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='scanner.shopping')),
             ],
         ),
     ]
