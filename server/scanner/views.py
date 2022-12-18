@@ -9,7 +9,9 @@ from .forms import ImageForm
 from django.contrib.auth import get_user_model
 import datetime
 from .image_processing import scan
-
+from PIL import Image
+import os
+import cv2 
 
 def index(request):
     template = loader.get_template('index.html')
@@ -25,10 +27,16 @@ def upload_receipt(request):
         form = ImageForm(request.POST, request.FILES)
         if form.is_valid():
             img = form.cleaned_data.get("receipt_image")
-            obj = Receipt(img = img)
-            obj.save()
-            print(obj)
-            context = scan("/server/receiptImages/" + img.name)
+            receipt = Receipt(img = img)
+            receipt.save()
+            
+            img_path = receipt.img.path
+            context, imgThreshold = scan(img_path)
+            if(imgThreshold is not None):
+                if os.path.exists(img_path):
+                    os.remove(img_path)
+                cv2.imwrite(img_path, imgThreshold)
+
             return render(request, "items_list.html", context)
     else:
         form = ImageForm()

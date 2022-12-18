@@ -22,12 +22,48 @@ function takePhoto(photo, canvas, video, width, height) {
     const imageUploader = document.getElementById("id_receipt_image");
     imageUploader.files = container.files;
   }, "image/png");
-  
-  document.getElementById("take-photo-button").style.display = "flex";
+
+  document.getElementById("photo").style.display = "flex";
+}
+
+function activateBtn(button) {
+  if (!button.classList.contains("active")) {
+    button.classList.add("active");
+  }
+}
+
+function deactivateBtn(button) {
+  if (button.classList.contains("active")) {
+    button.classList.remove("active");
+  }
+}
+
+function addListenersToMethodChoosers() {
+  const takePhotoMethodBtn = document.getElementById(
+    "select-take-photo-method-btn"
+  );
+  const uploadPhotoMethodBtn = document.getElementById(
+    "select-upload-photo-method-btn"
+  );
+  const takePhotoContainer = document.getElementById("take-photo-container");
+  const uploadPhotoContainer = document.getElementById(
+    "upload-photo-container"
+  );
+  takePhotoMethodBtn.addEventListener("click", () => {
+    takePhotoContainer.style.display = "block";
+    uploadPhotoContainer.style.display = "none";
+    activateBtn(takePhotoMethodBtn);
+    deactivateBtn(uploadPhotoMethodBtn);
+  });
+  uploadPhotoMethodBtn.addEventListener("click", () => {
+    takePhotoContainer.style.display = "none";
+    uploadPhotoContainer.style.display = "flex";
+    activateBtn(uploadPhotoMethodBtn);
+    deactivateBtn(takePhotoMethodBtn);
+  });
 }
 
 (main = async () => {
-  const videoPhotoSection = document.getElementById("webcam-photo");
   const video = document.getElementById("webcam");
   const photo = document.getElementById("photo");
   const canvas = document.getElementById("canvas");
@@ -38,10 +74,10 @@ function takePhoto(photo, canvas, video, width, height) {
     video: videoSize,
   };
   let stream = null;
-  videoPhotoSection.style.display = "None";
-    try {
+  photo.style.display = "None";
+  try {
     stream = await navigator.mediaDevices.getUserMedia(videoConstraints);
-  } catch(err) {
+  } catch (err) {
     console.error(`${err.name}: ${err.message}`);
     return null;
   }
@@ -49,6 +85,7 @@ function takePhoto(photo, canvas, video, width, height) {
   video.onloadedmetadata = () => {
     video.play();
   };
+  addListenersToMethodChoosers();
   takePhotoButton.addEventListener(
     "click",
     (e) => {

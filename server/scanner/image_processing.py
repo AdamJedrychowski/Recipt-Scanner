@@ -41,7 +41,7 @@ def findDocumentContour(img):
     imgBlur = cv2.GaussianBlur(imgGray, (5,5), 0)
     #calculates threshold of image using Otsu method
     _, threshold = cv2.threshold(imgBlur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
-    threshold = cv2.erode(threshold, np.ones((5,5), np.uint8))
+    threshold = cv2.erode(threshold, np.ones((3,3), np.uint8))
 
     #contours are lists of points that make a contour
     contours, _ = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -70,17 +70,15 @@ def findDocumentContour(img):
 
 def scan(image):
     img = cv2.imread(image)
-    img_copy = img.copy()
 
-    documentContour, imgThreshold = findDocumentContour(img_copy)
-    imgThreshold = cv2.drawContours(cv2.cvtColor(imgThreshold, cv2.COLOR_GRAY2BGR), [documentContour], -1, (0,255,0), 3)
+    documentContour, imgThreshold = findDocumentContour(img)
+    # imgThreshold = cv2.drawContours(cv2.cvtColor(imgThreshold, cv2.COLOR_GRAY2BGR), [documentContour], -1, (0,255,0), 3)
     
     # cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
     
-    imgWarped = four_point_transform(img_copy, documentContour.reshape(4,2))
+    imgWarped = four_point_transform(img, documentContour.reshape(4,2))
     
     # cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
-    
     
     options = "--psm 6"
     data = pytesseract.image_to_string(cv2.cvtColor(imgWarped, cv2.COLOR_BGR2RGB), lang='pol', config=options)
@@ -88,14 +86,16 @@ def scan(image):
     company_name = data.split("\n")[0]
     
     addressRegex = r'([0-9]{2}\-[0-9]{3})'
-    address= ""
+    address = None 
     
     dateRegex = r'([0-9]{4}\-[0-9]{2}\-[0-9]{2})'
-    date= ""
+    date = None 
     
-    priceRegex = r'([0-9]+\,|\.[0-9]+)'
-    items = []
-    
+    priceRegex = r'([0-9]+(\,|\.)[0-9]+)'
+    items = None
+
+    total_value = None
+
     for row in data.split("\n"):
         if re.search(addressRegex, row) is not None:
             address = row
@@ -110,12 +110,18 @@ def scan(image):
         # Looking for rows containing prices
         match = re.search(priceRegex, row)
         if match:
+            items = [] if items == None else items
             words = row.split()
-            price_index = words.index(match.group())
+            print(row, words, match, match.group())
+            try:
+                price_index = words.index(match.group())
+            except ValueError as e:
+                continue
+
             description = ' '.join(words[:price_index])
             price = match.group()[1:].replace(',', '.')
             items.append({'description': description, 'price': price})
             
     context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items}
 
-    return context
+    return context, imgThreshold
