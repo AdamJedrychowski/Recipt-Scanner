@@ -8,6 +8,7 @@ from .models import Shopping, Item, Receipt
 from .forms import ImageForm
 from django.contrib.auth import get_user_model
 import datetime
+from .image_processing import scan
 
 
 def index(request):
@@ -27,6 +28,8 @@ def upload_receipt(request):
             obj = Receipt(img = img)
             obj.save()
             print(obj)
+            context = scan("receiptImages/receipt.jpg")
+            return render(request, "items_list.html", context)
     else:
         form = ImageForm()
     ctx = {"form": form}
@@ -41,12 +44,6 @@ def view(request):
     template = loader.get_template('view_shopping.html')
     context = { 'shop': shop }
     return HttpResponse(template.render(context, request))
-
-# def scan(request):
-
-#     # machine learning stuff
-#     print(request.POST.keys())
-#     return HttpResponseRedirect(reverse('index'))
 
 def purchase(request, id):
     shop = Shopping.objects.filter(user_id=request.user.id).values()
