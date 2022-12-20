@@ -85,27 +85,38 @@ def scan(image):
     
     company_name = data.split("\n")[0]
     
-    addressRegex = r'([0-9]{2}\-[0-9]{3})'
+    # \b is a word boundary. It matches the beginning and ending of a word
+    addressRegex = r'(\b[0-9]{2}\-[0-9]{3}\b)'
     address = None 
     
-    dateRegex = r'([0-9]{4}\-[0-9]{2}\-[0-9]{2})'
+    # two formats of saving data on the receipts
+    dateRegex = r'(\b[0-9]{2}\-[0-9]{2}\-[0-9]{4}\b|\b[0-9]{4}\-[0-9]{2}\-[0-9]{2}\b)'
     date = None 
     
-    priceRegex = r'([0-9]+(\,|\.)[0-9]+)'
+    priceRegex = r'(\b[0-9]+(\,|\.)[0-9]{2}\b)'
     items = None
 
     total_value = None
+    debug = []
 
     for row in data.split("\n"):
         if re.search(addressRegex, row) is not None:
             address = row
         if re.search(dateRegex, row) is not None:
-            date = row
+            try:
+                date = re.search(addressRegex, row).group(1) # taking only the date out of the date row
+            except Exception as e:
+                continue
            
-        # Skipping lines that contain string 'SUMA PLN'  
-        if 'SUMA' in row:
-            total_index = data.index('SUMA')
-            total_value = data[total_index + 8].replace(',', '.') # from 'S' it takes 8 characters to get to the value of total price
+        # Searching for total value
+        suma_list = ['SUMA', 'Suma', 'SUMA PLN', 'SUMA: PLN']
+        if any(suma in row for suma in suma_list):
+            # total_index = data.index('SUMA')
+            # total_value = data[total_index + 8].replace(',', '.')
+            try:
+                total_value = re.search(priceRegex, row).group(1)
+            except Exception as e:
+                continue
             
         # Looking for rows containing prices
         match = re.search(priceRegex, row)
@@ -121,6 +132,10 @@ def scan(image):
             description = ' '.join(words[:price_index])
             price = match.group()[1:].replace(',', '.')
             items.append({'description': description, 'price': price})
+            
+    # Uncomment if you want to see all of the lines and comment next context inicialization
+    #     debug.append(row)
+    # context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items, 'debug': debug}
             
     context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items}
 

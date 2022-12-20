@@ -1,25 +1,40 @@
 {% load static %}
+
 <head>
     {% include "head.html" %}
     <title>Receipt Items</title>
     <link rel="stylesheet" type="text/css" href="{% static 'css/items.css' %}" />
 </head>
+
 <body>
     {% include "navbar.html" %}
     <h2>Receipt Items</h2>
     <main>
         <ul class="list-group list-group-flush">
-            <li class="list-group-item"><b>Company name:</b> <p>{{company}}</p></li>
-            <li class="list-group-item"><b>Address:</b> <p>{{address}}</p></li>
-            <li class="list-group-item"><b>Date:</b> <p>{{date}}</p></li>
-            <li class="list-group-item"><b>Full price:</b> <p>{{full_price}}</p></li>
+            <li class="list-group-item"><b>Company name:</b>
+                <p>{{company}}</p>
+            </li>
+            <li class="list-group-item"><b>Address:</b>
+                <p>{{address}}</p>
+            </li>
+            <li class="list-group-item"><b>Date:</b>
+                <p>{{date}}</p>
+            </li>
+            <li class="list-group-item"><b>Full price:</b>
+                <p>{{full_price}}</p>
+            </li>
             <li class="list-group-item">
                 <b>Items:</b>
                 {% for item in items %}
-                    <div class="item">
-                        {{ item.description }}: ${{ item.price }}
-                    </div>
+                <div class="item">
+                    {{ item.description }}: ${{ item.price }}
+                </div>
                 {% endfor %}
+                <!-- COMMENT 4 LINES BELOW IF NOT DEBUGGING -->
+                <!-- <b>Debug (list all lines):</b>
+                {% for item in debug %}
+                    <p>{{ item }}</p>
+                {% endfor %} -->
             </li>
         </ul>
     </main>
