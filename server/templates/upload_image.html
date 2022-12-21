@@ -22,28 +22,32 @@
       </div>
     </div>
     <div id="upload-photo-container">
-      <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %} {{form.as_p}}
-        <input
-          type="submit"
-          value="Submit"
-          class="btn btn-outline-primary submit-btn"
-        />
-      </form>
-    </div>
-    <div id="take-photo-container">
-      <div id="webcam-photo">
-        <video id="webcam" autoplay></video>
-        <canvas id="canvas"></canvas>
-        <img
-          id="photo"
-          class="img-fluid"
-          alt="Screen capture will appear here"
-        />
+      <div id="form-container">
+        <form id="img-form" method="POST" enctype="multipart/form-data">
+          {% csrf_token %} {{form.as_p}}
+        </form>
       </div>
-      <button id="take-photo-button" class="btn btn-outline-primary">
-        Take photo
-      </button>
+      <div id="take-photo-container">
+        <div id="webcam-photo">
+          <video id="webcam" autoplay></video>
+          <canvas id="canvas"></canvas>
+          <img
+            id="photo"
+            class="img-fluid"
+            alt="Screen capture will appear here"
+          />
+        </div>
+        <button id="take-photo-button" class="btn btn-outline-primary">
+          Take photo
+        </button>
+      </div>
+      <input
+        form="img-form"
+        id="submit"
+        type="submit"
+        value="Submit"
+        class="btn btn-outline-primary submit-btn"
+      />
     </div>
   </main>
   <script src="{% static 'js/webcam.js' %}"></script>

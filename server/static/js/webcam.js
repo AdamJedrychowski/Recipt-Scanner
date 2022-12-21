@@ -46,9 +46,7 @@ function addListenersToMethodChoosers() {
     "select-upload-photo-method-btn"
   );
   const takePhotoContainer = document.getElementById("take-photo-container");
-  const uploadPhotoContainer = document.getElementById(
-    "upload-photo-container"
-  );
+  const uploadPhotoContainer = document.getElementById("form-container");
   takePhotoMethodBtn.addEventListener("click", () => {
     takePhotoContainer.style.display = "block";
     uploadPhotoContainer.style.display = "none";

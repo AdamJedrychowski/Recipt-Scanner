@@ -12,13 +12,12 @@
 
 #upload-photo-container {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
+  flex-direction: column;
 }
-
-#upload-photo-container .submit-btn {
-  display: block;
-  margin: 0 auto;
+#form-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #upload-photo-container form {
@@ -38,14 +37,6 @@
 #upload-photo-container .submit-btn {
   display: block;
   margin: 0 auto;
-}
-
-#upload-photo-container form {
-  margin-top: 1.5em;
-}
-
-#take-photo-container {
-  display: none;
 }
 
 #webcam-photo {
@@ -72,7 +63,14 @@
   margin: 1em auto;
 }
 
-#take-photo-button {
+.errorlist {
+  display: none;
+}
+
+form {
+  display: flex;
+}
+form p {
   display: block;
-  margin: 1em auto;
+  margin: 0 auto;
 }
