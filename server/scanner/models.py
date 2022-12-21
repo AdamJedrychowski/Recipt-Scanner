@@ -1,6 +1,8 @@
 from django.db import models
 from django.conf import settings
 
+
+
 class Shopping(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date = models.DateField()
@@ -12,6 +14,7 @@ class Item(models.Model):
     shopping = models.ForeignKey(Shopping, on_delete=models.CASCADE)
     item = models.CharField(max_length=50)
     price = models.DecimalField(max_digits=9, decimal_places=2)
+
 
 class Receipt(models.Model):
     #TODO
