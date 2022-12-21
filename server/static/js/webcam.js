@@ -61,6 +61,28 @@ function addListenersToMethodChoosers() {
   });
 }
 
+function addListenerToUploadInput() {
+  const imageUploader = document.getElementById("id_receipt_image");
+  const uploadedPhoto = document.getElementById("uploaded-photo");
+  imageUploader.addEventListener("change", () => {
+    if (imageUploader.files && imageUploader.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        uploadedPhoto.setAttribute("src", e.target.result);
+        uploadedPhoto.style.display = "block";
+      };
+      reader.readAsDataURL(imageUploader.files[0]);
+    } else {
+      uploadedPhoto.style.display = "none";
+    }
+  });
+}
+
+(initListeners = () => {
+  addListenersToMethodChoosers();
+  addListenerToUploadInput();
+})();
+
 (main = async () => {
   const video = document.getElementById("webcam");
   const photo = document.getElementById("photo");
@@ -83,12 +105,11 @@ function addListenersToMethodChoosers() {
   video.onloadedmetadata = () => {
     video.play();
   };
-  addListenersToMethodChoosers();
   takePhotoButton.addEventListener(
     "click",
     (e) => {
-      takePhoto(photo, canvas, video, videoSize.width, videoSize.height);
       e.preventDefault();
+      takePhoto(photo, canvas, video, videoSize.width, videoSize.height);
     },
     false
   );
