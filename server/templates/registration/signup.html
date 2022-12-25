@@ -1,11 +1,15 @@
 {% include "navbar.html" %} {% load static %}
 <head>
-    {% include "head.html" %}
-    <title>Sign up</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
+  {% include "head.html" %}
+  <title>Sign up</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/forms.css' %}" />
 </head>
-<form method="post" class="sign-form">
-    <h2>Sign up</h2>
-    {% csrf_token %} {{ form.as_table }}
-    <button type="submit" class="btn btn-primary submit-btn">Sign up</button>
-</form>
+<body>
+  <div class="form-container">
+    <form method="post" class="sign-form">
+      <h2>Sign Up</h2>
+      {% csrf_token %} {%include "formFields.html" %}
+      <button type="submit" class="btn btn-primary submit-btn">Sign Up</button>
+    </form>
+  </div>
+</body>

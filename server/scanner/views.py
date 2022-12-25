@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.template import loader
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
+from django.contrib.auth import get_user_model
+from .forms import UserRegistrationForm
+
 from .models import Shopping, Item, Receipt
 from .forms import ImageForm
-from django.contrib.auth import get_user_model
 from .image_processing import scan
 import os
 import cv2 
@@ -20,16 +22,34 @@ class SignUpView(generic.CreateView):
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
 
-def siqn_up(request):
-    if request.method == "POST":
-        form = UserCreationForm(request.POST)
+def sign_up(request):
+    if request.method == 'POST':
+        form = UserRegistrationForm(request.POST)
+        print(form.is_valid())
         if form.is_valid():
             form.save()
-            username = form.cleaned_data("username")
-            password = form.cleaned_data("password")
+            username = form.cleaned_data.get("username")
+            password = form.cleaned_data.get("password1")
             user = authenticate(username=username, password=password)
-            login(request, user)
-            return redirect('index') 
+            if user:
+                login(request, user)
+            return redirect(reverse('index'))
+    else:
+        form = UserRegistrationForm()
+    return render(request, 'registration/signup.html', {'form': form})
+    
+
+    # if request.method == "POST":
+    #     form = UserCreationForm(request.POST)
+    #     if form.is_valid():
+    #         form.save()
+    #         username = form.cleaned_data("username")
+    #         password = form.cleaned_data("password")
+    #         user = authenticate(username=username, password=password)
+    #         login(request, user)
+    #         return redirect('index') 
+    # return render(request, "registration/signup.html", {"form": form})
+
 
 def upload_receipt(request):
     if request.method == "POST":
