@@ -1,11 +1,12 @@
-#method-select-btns {
+main {
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  margin-bottom: 1em;
+  flex-direction: column;
+  align-items: center;
+  width: min-content;
+  margin: 0 auto;
 }
 
-#upload-method-selector h2 {
+#header h2 {
   text-align: center;
   margin: 1em;
 }
@@ -13,76 +14,91 @@
 #upload-photo-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: left;
+  width: fit-content;
 }
-#form-container {
+
+#take-photo-container {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: fit-content;
+}
+
+p label {
+  display: none;
+}
+
+p input {
+  margin-top: 1rem;
+  display: block;
+}
+
+#select-take-photo-method-btn {
+  margin-top: 0;
+}
+#select-upload-photo-method-btn {
+  margin-top: 0;
+}
+#take-photo-button {
+  margin: 0;
+}
+
+#img-form {
+  margin: 0;
+}
+
+form p {
+  margin: 0;
+  display: block;
+}
+form p input {
+  margin: 0;
+  padding: 0;
+  height: 2rem;
+}
+
+.activity > * {
+  margin: 1rem;
+  width: 100%;
+}
+.activity {
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1rem;
+  padding: 0;
+  margin: 0;
+}
+
+.submit-btn {
+  margin: 1rem;
+}
+#webcam-photo {
+  margin-top: 1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#upload-photo-container form {
-  margin-top: 1.5em;
-}
-
-#uploaded-photo {
-  width: 300px;
-  height: 350px;
-}
-
-#take-photo-container {
-  display: none;
-}
-
-#webcam-photo {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
-#upload-photo-container .submit-btn {
-  display: block;
-  margin: 0 auto;
-}
-
-#webcam-photo {
-  display: flex;
-}
-
 #webcam {
+  min-width: 300px;
   width: 50%;
   height: 50%;
 }
 
 #photo {
+  min-width: 300px;
   width: 50%;
 }
 
 #canvas {
   display: none;
-  width: 50%;
-  height: 50%;
+  width: 1920px;
+  height: 1080px;
 }
 
-#take-photo-button {
-  display: block;
-  margin: 1em auto;
-}
-
-#img-form p {
-  display: flex;
-  justify-content: center;
-  flex-direction: row;
-}
-
-.errorlist {
-  display: none;
-}
-
-form {
-  display: flex;
-}
-form p {
-  display: block;
-  margin: 0 auto;
+#submit {
+  width: 100%;
 }

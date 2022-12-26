@@ -1,8 +1,8 @@
 {% load static %} {%block formFields%} {% for field in form %}
-<div class="form-field-container">
-  {{ field.label_tag }} {{ field }} {% for error in field.errors %}
-  <span class="error-msg">{{ error }}</span>
-  {% endfor %}
-</div>
+    <div class="form-field-container">
+        {{ field.label_tag }} {{ field }} {% for error in field.errors %}
+            <span class="error-msg">{{ error }}</span>
+        {% endfor %}
+    </div>
 
 {% endfor %} {%endblock%}

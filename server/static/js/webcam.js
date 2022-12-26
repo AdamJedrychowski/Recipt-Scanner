@@ -1,11 +1,3 @@
-// function clearPhoto(photo, canvas) {
-//   const ctx = canvas.getContext("2d");
-//   ctx.fillStyle = "#AAA";
-//   ctx.fillRect(0, 0, canvas.width, canvas.height);
-//   const data = canvas.toDataURL("image/png");
-//   photo.setAttribute("src", data);
-// }
-
 function takePhoto(photo, canvas, video, width, height) {
   const ctx = canvas.getContext("2d");
   canvas.width = width;
@@ -26,38 +18,44 @@ function takePhoto(photo, canvas, video, width, height) {
   document.getElementById("photo").style.display = "flex";
 }
 
-function activateBtn(button) {
-  if (!button.classList.contains("active")) {
-    button.classList.add("active");
-  }
-}
+// function activateBtn(button) {
+//   if (!button.classList.contains("active")) {
+//     button.classList.add("active");
+//   }
+// }
 
-function deactivateBtn(button) {
-  if (button.classList.contains("active")) {
-    button.classList.remove("active");
-  }
-}
+// function deactivateBtn(button) {
+//   if (button.classList.contains("active")) {
+//     button.classList.remove("active");
+//   }
+// }
 
 function addListenersToMethodChoosers() {
-  const takePhotoMethodBtn = document.getElementById(
+  const setTakePhotoBtn = document.getElementById(
     "select-take-photo-method-btn"
   );
-  const uploadPhotoMethodBtn = document.getElementById(
+  const setUploadPhotoBtn = document.getElementById(
     "select-upload-photo-method-btn"
   );
+
   const takePhotoContainer = document.getElementById("take-photo-container");
-  const uploadPhotoContainer = document.getElementById("form-container");
-  takePhotoMethodBtn.addEventListener("click", () => {
-    takePhotoContainer.style.display = "block";
+  const uploadPhotoContainer = document.getElementById(
+    "upload-photo-container"
+  );
+
+  setTakePhotoBtn.addEventListener("click", () => {
+    takePhotoContainer.style.display = "flex";
     uploadPhotoContainer.style.display = "none";
-    activateBtn(takePhotoMethodBtn);
-    deactivateBtn(uploadPhotoMethodBtn);
+
+    // setUploadPhotoBtn.style.display = "block";
+    // this.style.display = "none";
   });
-  uploadPhotoMethodBtn.addEventListener("click", () => {
+  setUploadPhotoBtn.addEventListener("click", () => {
     takePhotoContainer.style.display = "none";
     uploadPhotoContainer.style.display = "flex";
-    activateBtn(uploadPhotoMethodBtn);
-    deactivateBtn(takePhotoMethodBtn);
+
+    // setUploadPhotoBtn.style.display = "none";
+    // this.style.display = "block";
   });
 }
 
@@ -77,11 +75,6 @@ function addListenerToUploadInput() {
     }
   });
 }
-
-(initListeners = () => {
-  addListenersToMethodChoosers();
-  addListenerToUploadInput();
-})();
 
 (main = async () => {
   const video = document.getElementById("webcam");
@@ -114,5 +107,6 @@ function addListenerToUploadInput() {
     false
   );
 
-  //   clearPhoto(photo, canvas);
+  addListenersToMethodChoosers();
+  addListenerToUploadInput();
 })();

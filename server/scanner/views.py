@@ -1,26 +1,23 @@
+import os
+import cv2 
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy, reverse
-from django.template import loader
 from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
-from django.contrib.auth import get_user_model
-from .forms import UserRegistrationForm
 
+from .forms import UserRegistrationForm
 from .models import Shopping, Item, Receipt
 from .forms import ImageForm
 from .image_processing import scan
-import os
-import cv2 
 
 def index(request):
-    template = loader.get_template('index.html')
     return render(request, 'index.html', {})
 
-class SignUpView(generic.CreateView):
-    form_class = UserCreationForm
-    success_url = reverse_lazy("login")
-    template_name = "registration/signup.html"
+# class SignUpView(generic.CreateView):
+#     form_class = UserCreationForm
+#     success_url = reverse_lazy("login")
+#     template_name = "registration/signup.html"
 
 def sign_up(request):
     if request.method == 'POST':
@@ -38,18 +35,6 @@ def sign_up(request):
         form = UserRegistrationForm()
     return render(request, 'registration/signup.html', {'form': form})
     
-
-    # if request.method == "POST":
-    #     form = UserCreationForm(request.POST)
-    #     if form.is_valid():
-    #         form.save()
-    #         username = form.cleaned_data("username")
-    #         password = form.cleaned_data("password")
-    #         user = authenticate(username=username, password=password)
-    #         login(request, user)
-    #         return redirect('index') 
-    # return render(request, "registration/signup.html", {"form": form})
-
 
 def upload_receipt(request):
     if request.method == "POST":
