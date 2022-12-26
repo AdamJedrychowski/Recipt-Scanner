@@ -2,7 +2,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: min-content;
   margin: 0 auto;
 }
 
@@ -84,13 +83,12 @@ form p input {
 
 #webcam {
   min-width: 300px;
-  width: 50%;
-  height: 50%;
+  max-width: 50%;
 }
 
 #photo {
   min-width: 300px;
-  width: 50%;
+  max-width: 30%;
 }
 
 #canvas {
@@ -100,5 +98,5 @@ form p input {
 }
 
 #submit {
-  width: 100%;
+  width: 20rem;
 }

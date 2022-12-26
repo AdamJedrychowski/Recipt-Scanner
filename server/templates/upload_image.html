@@ -1,58 +1,58 @@
 {% load static %}
 <head>
-  {% include "head.html" %}
-  <title>Upload image</title>
-  <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}" />
+    {% include "head.html" %}
+    <title>Upload image</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/upload.css' %}" />
 </head>
 <body>
-  {% include "navbar.html" %}
-  <main>
-    <div id="header">
-      <h2>Upload receipt photo</h2>
-    </div>
+    {% include "navbar.html" %}
+    <main>
+        <div id="header">
+            <h2>Upload receipt photo</h2>
+        </div>
 
-    <div id="upload-photo-container">
-      <div class="activity">
-        <button class="btn btn-primary" id="select-take-photo-method-btn">
-          Take a photo with your webcam
-        </button>
-        <form id="img-form" method="POST" enctype="multipart/form-data">
-          {% csrf_token %} {{form.as_p}}
-        </form>
-      </div>
-    </div>
+        <div id="upload-photo-container">
+            <div class="activity">
+                <button class="btn btn-primary" id="select-take-photo-method-btn">
+                    Take a photo with your webcam
+                </button>
+                <form id="img-form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %} {{form.as_p}}
+                </form>
+            </div>
+        </div>
 
-    <div id="take-photo-container">
-      <div class="activity">
-        <button
-          class="btn btn-primary active"
-          id="select-upload-photo-method-btn"
-        >
-          Upload photo from the drive
-        </button>
-        <button id="take-photo-button" class="btn btn-outline-primary">
-          Take a photo
-        </button>
-      </div>
+        <div id="take-photo-container">
+            <div class="activity">
+                <button
+                    class="btn btn-primary active"
+                    id="select-upload-photo-method-btn"
+                >
+                    Upload photo from the drive
+                </button>
+                <button id="take-photo-button" class="btn btn-outline-primary">
+                    Take a photo
+                </button>
+            </div>
 
-      <div id="webcam-photo">
-        <video id="webcam" autoplay></video>
-        <canvas id="canvas"></canvas>
-        <img
-          id="photo"
-          class="img-fluid"
-          alt="Screen capture will appear here"
+            <div id="webcam-photo">
+                <video id="webcam" autoplay></video>
+                <canvas id="canvas"></canvas>
+                <img
+                    id="photo"
+                    class="img-fluid"
+                    alt="Screen capture will appear here"
+                />
+            </div>
+        </div>
+
+        <input
+            form="img-form"
+            id="submit"
+            type="submit"
+            value="Submit"
+            class="btn btn-outline-primary submit-btn"
         />
-      </div>
-    </div>
-
-    <input
-      form="img-form"
-      id="submit"
-      type="submit"
-      value="Submit"
-      class="btn btn-outline-primary submit-btn"
-    />
-  </main>
-  <script src="{% static 'js/webcam.js' %}"></script>
+    </main>
+    <script src="{% static 'js/webcam.js' %}"></script>
 </body>
