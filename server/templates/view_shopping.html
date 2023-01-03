@@ -1,28 +1,36 @@
-{% include "navbar.html" %}
+{% load static %}
 <head>
     {% include "head.html" %}
     <title>View receipt</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/items.css' %}" />
 </head>
 <body>
-    <header>
-        <h1>Shopping</h1>
+    {% include "navbar.html" %}
+    <header style="margin-top: 5%;">
+        <h2>Shopping</h2>
     </header>
-    <main>
-        <table>
-            <tr>
-                <th>Nr</th>
-                <th>Date</th>
-                <th>Where</th>
-                <th>Full Price</th>
-            </tr>
-            {% for x in shop %}
+    <main class="container">
+        <table class="table table-striped table-fixed">
+            <thead>
                 <tr>
-                    <td><a href="{% url 'purchase' x.id %}">{{ forloop.counter }}</a></td>
-                    <td>{{ x.date }}</td>
-                    <td>{{ x.place }}</td>
-                    <td>{{ x.full_price }}</td>
+                    <th scope="col">Nr</th>
+                    <th scope="col">Shop name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Where</th>
+                    <th scope="col">Full Price</th>
                 </tr>
-            {% endfor %}
+            </thead>
+            <tbody>
+                {% for x in shop %}
+                    <tr>
+                        <th scope="row"><a href="{% url 'purchase' x.id %}">{{ forloop.counter }}</a></td>
+                        <td>{{ x.shop_name }}</td>
+                        <td>{{ x.date }}</td>
+                        <td>{{ x.place }}</td>
+                        <td>{{ x.full_price }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
         </table>
     </main>
 </body>

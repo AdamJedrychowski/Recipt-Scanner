@@ -46,6 +46,12 @@ def upload_receipt(request):
             
             img_path = receipt.img.path
             context, imgThreshold = scan(img_path)
+            new_shop = Shopping(user=request.user, shop_name=context['company'], date=context['date'], place=context['address'], full_price=context['full_price'])
+            new_shop.save()
+            for item in context['items']:
+                new_item = Item(shopping=new_shop, item=item['desc'], price=item['price'])
+                new_item.save()
+            
             if(imgThreshold is not None):
                 if os.path.exists(img_path):
                     os.remove(img_path)
