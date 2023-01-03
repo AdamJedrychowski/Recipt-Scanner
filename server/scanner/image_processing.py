@@ -99,6 +99,8 @@ def scan(image):
     cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
     
     imgWarped = four_point_transform(img, documentContour.reshape(4,2))
+    # Cutting 50 pixels from the top, sometimes the image has black pixels at the top because of eg. folded receipt
+    imgWarped = imgWarped[50:imgWarped.shape[0], 0:imgWarped.shape[1]]
     
     # calculating new threshold for receipt without backround
     imgWarped = covert2Gray(imgWarped)
@@ -106,7 +108,7 @@ def scan(image):
     cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
     
     options = "--psm 6"
-    data = pytesseract.image_to_string(imgWarped, lang='eng', config=options)
+    data = pytesseract.image_to_string(imgWarped, lang='pol', config=options)
     
     company_name = data.split("\n")[0]
     
@@ -165,7 +167,7 @@ def scan(image):
             description = tmp_description if tmp_description != '' else " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
             tmp_description = ''
             # price = match.group().replace(',', '.')
-            temp = (re.findall(priceRegex, row)[0].replace(",", ".")) 
+            temp = (re.findall(priceRegex, row)[-1].replace(",", ".")) 
             price = float(temp)
             items.append({'description': description, 'price': price})
             
