@@ -107,7 +107,7 @@ def scan(image):
     cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
     
     options = "--psm 6"
-    data = pytesseract.image_to_string(imgWarped, lang='pol', config=options)
+    data = pytesseract.image_to_string(imgWarped, lang='eng', config=options)
     
     company_name = data.split("\n")[0]
     
@@ -119,7 +119,7 @@ def scan(image):
     dateRegex = r'(\b[0-9]{2}\-[0-9]{2}\-[0-9]{4}\b|\b[0-9]{4}\-[0-9]{2}\-[0-9]{2}\b)'
     date = None 
     
-    priceRegex = r'(\b[0-9]+(\,|\.)[0-9]{2}\b)'
+    priceRegex = r'(\b[0-9]+[\,\.][0-9]{2}\b)'
     items = None
 
     total_value = None
@@ -135,9 +135,15 @@ def scan(image):
             date = re.search(dateRegex, row).group(1) # taking only the date out of the date row
            
         # Searching for total value
-        if difflib.get_close_matches('SUMA', row.upper().split(), n=1):
+        totalSynonyms = ["SUMA", "SUM", "TOTAL", "PRICE", "PLN", "$"]
+        temp = [difflib.get_close_matches(synonym, row.upper().split(), n=1) for synonym in totalSynonyms]
+        print(row)
+        isTotal =  any(temp)
+        if (isTotal):
             try:
-                total_value = re.search(priceRegex, row).group(1)
+                total_value = float(re.findall(priceRegex, row)[0].replace(",", "."))
+                continue
+                # total_value = re.search(priceRegex, row).group(1)
             except Exception as e:
                 continue
             
@@ -159,7 +165,9 @@ def scan(image):
             # description = row[:price_index]
             description = tmp_description if tmp_description != '' else row[:price_index]
             tmp_description = ''
-            price = match.group().replace(',', '.')
+            # price = match.group().replace(',', '.')
+            temp = (re.findall(priceRegex, row)[0].replace(",", ".")) 
+            price = float(temp)
             items.append({'description': description, 'price': price})
             
         if difflib.get_close_matches('PARAGON', row.split(), n=1):
