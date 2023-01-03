@@ -6,14 +6,15 @@ body {
 #body-container {
     margin: 0 auto;
     margin-top: 10rem;
-    background-color: palegreen;
+    background-color: #007bff;
+    color: white;
     border-radius: 20px;
+    width: 60%;
   }
   
   #app-description {
     margin: 10%;
     text-align: justify;
-    width: 500px;
     max-width: fit-content;
     font-size: 1.3rem;
   }
