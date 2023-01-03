@@ -1,11 +1,9 @@
 {% extends 'view_shopping.html' %} {% block content %}
-    <head>
-        <title>Purchase</title>
-    </head>
-    <table>
+    <h2>Items</h2>
+    <table class="container table table-striped table-fixed">
         <tr>
-            <th>Item</th>
-            <th>Price</th>
+            <th scope="col">Item</th>
+            <th scope="col">Price</th>
         </tr>
         {% for x in items %}
             <tr>

@@ -49,7 +49,7 @@ def upload_receipt(request):
             new_shop = Shopping(user=request.user, shop_name=context['company'], date=context['date'], place=context['address'], full_price=context['full_price'])
             new_shop.save()
             for item in context['items']:
-                new_item = Item(shopping=new_shop, item=item['desc'], price=item['price'])
+                new_item = Item(shopping=new_shop, item=item['description'], price=item['price'])
                 new_item.save()
             
             if(imgThreshold is not None):
@@ -69,7 +69,7 @@ def view(request):
     return render(request, 'view_shopping.html', context)
 
 def purchase(request, id):
-    shop = Shopping.objects.filter(user_id=request.user.id).values()
+    shop = Shopping.objects.filter(id=id).values()
     items = Item.objects.filter(shopping_id=id).values()
     context = { 'shop': shop, 'items': items }
     return render(request, 'purchase.html', context)
