@@ -6,6 +6,7 @@ from django.views import generic
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate
 from datetime import datetime
+from dateutil import parser
 
 from .forms import UserRegistrationForm
 from .models import Shopping, Item, Receipt
@@ -49,12 +50,13 @@ def upload_receipt(request):
             context, imgThreshold = scan(img_path)
             
             if request.user.is_authenticated:
-                date = datetime.strptime(context['date'], '%d-%m-%Y')
+                date = parser.parse(context['date']) if context['date'] else None
                 new_shop = Shopping(user=request.user, shop_name=context['company'], date=date, place=context['address'], full_price=context['full_price'])
                 new_shop.save()
-                for item in context['items']:
-                    new_item = Item(shopping=new_shop, item=item['description'], price=item['price'])
-                    new_item.save()
+                if context['items']:
+                    for item in context['items']:
+                        new_item = Item(shopping=new_shop, item=item['description'], price=item['price'])
+                        new_item.save()
             
             if(imgThreshold is not None):
                 imgName = os.path.basename(img_path)
