@@ -57,9 +57,15 @@ def upload_receipt(request):
                     new_item.save()
             
             if(imgThreshold is not None):
+                imgName = os.path.basename(img_path)
+                dirName = os.path.dirname(img_path)
+                userDirName = os.path.join(dirName, str(request.user))
                 if os.path.exists(img_path):
                     os.remove(img_path)
-                cv2.imwrite(img_path, imgThreshold)
+                if not os.path.exists(userDirName):
+                    os.mkdir(userDirName)
+                newPath = os.path.join(userDirName, imgName)
+                cv2.imwrite(newPath, imgThreshold)
 
             return render(request, "items_list.html", context)
     else:
