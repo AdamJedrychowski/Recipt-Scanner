@@ -1,29 +1,15 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
     <head>
         {% include "head.html" %}
         <title>Home page</title>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}" />
     </head>
-    <body style="display: flex; flex-direction: column">
+    <body>
         {% include "navbar.html" %}
-        <div
-            class="d-inline-block text-center"
-            style="
-                margin: 0 auto;
-                margin-top: 10rem;
-                background-color: palegreen;
-                border-radius: 20px;
-            "
-        >
-            <div
-                style="
-                    margin: 10%;
-                    text-align: justify;
-                    width: 500px;
-                    max-width: fit-content;
-                    font-size: 1.3rem;
-                "
-            >
+        <div class="d-inline-block text-center" id="body-container">
+            <div id="app-description">
                 <p>
                     Receipt scanner is an aplication which helps you to digitize your
                     receipts. If you are logged in, it allows you to store all important
