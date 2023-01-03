@@ -3,6 +3,8 @@ import pytesseract
 import cv2
 from imutils.perspective import four_point_transform
 import re
+import difflib
+from matplotlib import pyplot as plt
 
 def simplifyContourFurther(contour, cornerCount=4):
     """
@@ -37,7 +39,7 @@ def findDocumentContour(img):
     #blurring imgae to remove noise before thresholding
     imgBlur = cv2.GaussianBlur(imgGray, (5,5), 0)
     #calculating threshold of an image using Otsu method
-    _, threshold = cv2.threshold(imgBlur,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    _, threshold = cv2.threshold(imgBlur,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     threshold = cv2.erode(threshold, np.ones((3,3), np.uint8))
 
     #detecting contours: contour - list of points that enclose an object 
@@ -61,10 +63,32 @@ def findDocumentContour(img):
                     return (newApproxContour, threshold)
                     
             elif len(approxContour) == 4:
-                return (newApproxContour, threshold)
+                return (approxContour, threshold)
             else:
                 continue
     return None
+    
+def covert2Gray(img):
+    imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    
+    hist = cv2.calcHist([imgGray], [0], None, [256], [0, 256])
+
+    # Normalize the histogram
+    hist = hist / hist.max()
+
+    # Create a figure and plot the histogram
+    fig = plt.figure(figsize=(5,5))
+    plt.plot(hist)
+
+    # Save the figure to a file
+    plt.savefig('/server/receiptImages/histogram.png', bbox_inches='tight')
+    
+    ots, threshold = cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+    
+    with open('/server/receiptImages/histogram.txt', 'w') as file:
+        file.write(str(ots))
+    
+    return threshold
 
 def scan(image):
     img = cv2.imread(image)
@@ -72,14 +96,18 @@ def scan(image):
     documentContour, imgThreshold = findDocumentContour(img)
     # imgThreshold = cv2.drawContours(cv2.cvtColor(imgThreshold, cv2.COLOR_GRAY2BGR), [documentContour], -1, (0,255,0), 3)
     
-    # cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
+    cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
     
     imgWarped = four_point_transform(img, documentContour.reshape(4,2))
+    imgWarped = imgWarped[50:-15, 50:-15]
     
-    # cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
+    # calculating new threshold for receipt without backround
+    imgWarped = covert2Gray(imgWarped)
+    
+    cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
     
     options = "--psm 6"
-    data = pytesseract.image_to_string(cv2.cvtColor(imgWarped, cv2.COLOR_BGR2RGB), lang='pol', config=options)
+    data = pytesseract.image_to_string(imgWarped, lang='pol', config=options)
     
     company_name = data.split("\n")[0]
     
@@ -96,21 +124,18 @@ def scan(image):
 
     total_value = None
     debug = []
+    
+    flag = 0 #indication of beginning and end of items on the receipt
+    tmp_description = '' #will be used when description and price of an item are in the different rows
 
     for row in data.split("\n"):
-        if re.search(addressRegex, row) is not None:
+        if re.search(addressRegex, row) is not None and address is None:
             address = row
         if re.search(dateRegex, row) is not None:
-            try:
-                date = re.search(addressRegex, row).group(1) # taking only the date out of the date row
-            except Exception as e:
-                continue
+            date = re.search(dateRegex, row).group(1) # taking only the date out of the date row
            
         # Searching for total value
-        suma_list = ['SUMA', 'Suma', 'SUMA PLN', 'SUMA: PLN']
-        if any(suma in row for suma in suma_list):
-            # total_index = data.index('SUMA')
-            # total_value = data[total_index + 8].replace(',', '.')
+        if difflib.get_close_matches('SUMA', row.upper().split(), n=1):
             try:
                 total_value = re.search(priceRegex, row).group(1)
             except Exception as e:
@@ -118,18 +143,27 @@ def scan(image):
             
         # Looking for rows containing prices
         match = re.search(priceRegex, row)
-        if match:
+        
+        tmp = row.upper().split()
+        if difflib.get_close_matches('SPRZED', tmp, n=1) or difflib.get_close_matches('RAZEM', tmp, n=1) or difflib.get_close_matches('PTU', tmp, n=1):
+            flag = 0
+            
+        if match is None and flag == 1:
+            tmp_description = row
+        
+        if match and flag == 1 and 'Rabat' not in row:
             items = [] if items == None else items
-            words = row.split()
-            print(row, words, match, match.group())
-            try:
-                price_index = words.index(match.group())
-            except ValueError as e:
-                continue
-
-            description = ' '.join(words[:price_index])
-            price = match.group()[1:].replace(',', '.')
+            
+            price_index = row.find(match.group())
+            
+            # description = row[:price_index]
+            description = tmp_description if tmp_description != '' else row[:price_index]
+            tmp_description = ''
+            price = match.group().replace(',', '.')
             items.append({'description': description, 'price': price})
+            
+        if difflib.get_close_matches('PARAGON', row.split(), n=1):
+            flag = 1
             
     # Uncomment if you want to see all of the lines and comment next context inicialization
     #     debug.append(row)
