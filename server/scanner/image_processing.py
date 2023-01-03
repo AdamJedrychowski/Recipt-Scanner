@@ -40,7 +40,7 @@ def findDocumentContour(img):
     imgBlur = cv2.GaussianBlur(imgGray, (5,5), 0)
     #calculating threshold of an image using Otsu method
     _, threshold = cv2.threshold(imgBlur,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    threshold = cv2.erode(threshold, np.ones((3,3), np.uint8))
+    # threshold = cv2.erode(threshold, np.ones((3,3), np.uint8))
 
     #detecting contours: contour - list of points that enclose an object 
     contours, _ = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -99,7 +99,6 @@ def scan(image):
     cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
     
     imgWarped = four_point_transform(img, documentContour.reshape(4,2))
-    imgWarped = imgWarped[50:-15, 50:-15]
     
     # calculating new threshold for receipt without backround
     imgWarped = covert2Gray(imgWarped)
@@ -160,10 +159,10 @@ def scan(image):
         if match and flag == 1 and 'Rabat' not in row:
             items = [] if items == None else items
             
-            price_index = row.find(match.group())
+            # price_index = row.find(match.group())
             
             # description = row[:price_index]
-            description = tmp_description if tmp_description != '' else row[:price_index]
+            description = tmp_description if tmp_description != '' else " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
             tmp_description = ''
             # price = match.group().replace(',', '.')
             temp = (re.findall(priceRegex, row)[0].replace(",", ".")) 
@@ -179,4 +178,4 @@ def scan(image):
             
     context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items}
 
-    return context, imgThreshold
+    return context, imgWarped 
