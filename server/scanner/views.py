@@ -1,11 +1,7 @@
-import os
-import cv2 
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy, reverse
-from django.views import generic
-from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse
 from django.contrib.auth import login, authenticate
-
+from dateutil import parser
 from .forms import UserRegistrationForm
 from .models import Shopping, Item, Receipt
 from .forms import ImageForm
@@ -13,11 +9,6 @@ from .image_processing import scan
 
 def index(request):
     return render(request, 'index.html', {})
-
-# class SignUpView(generic.CreateView):
-#     form_class = UserCreationForm
-#     success_url = reverse_lazy("login")
-#     template_name = "registration/signup.html"
 
 def sign_up(request):
     if request.method == 'POST':
@@ -45,24 +36,16 @@ def upload_receipt(request):
             receipt.save()
             
             img_path = receipt.img.path
-            context, imgThreshold = scan(img_path)
-            new_shop = Shopping(user=request.user, shop_name=context['company'], date=context['date'], place=context['address'], full_price=context['full_price'])
-            new_shop.save()
-            for item in context['items']:
-                new_item = Item(shopping=new_shop, item=item['description'], price=item['price'])
-                new_item.save()
+            context = scan(img_path)
             
-            if(imgThreshold is not None):
-                imgName = os.path.basename(img_path)
-                dirName = os.path.dirname(img_path)
-                userDirName = os.path.join(dirName, str(request.user))
-                if os.path.exists(img_path):
-                    os.remove(img_path)
-                if not os.path.exists(userDirName):
-                    os.mkdir(userDirName)
-                newPath = os.path.join(userDirName, imgName)
-                cv2.imwrite(newPath, imgThreshold)
-
+            if request.user.is_authenticated:
+                date = parser.parse(context['date']) if context['date'] else None
+                new_shop = Shopping(user=request.user, shop_name=context['company'], date=date, place=context['address'], full_price=context['full_price'])
+                new_shop.save()
+                if context['items']:
+                    for item in context['items']:
+                        new_item = Item(shopping=new_shop, item=item['description'], price=item['price'])
+                        new_item.save()
             return render(request, "items_list.html", context)
     else:
         form = ImageForm()

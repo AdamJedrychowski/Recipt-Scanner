@@ -1,10 +1,8 @@
-import numpy as np
 import pytesseract
 import cv2
 from imutils.perspective import four_point_transform
 import re
 import difflib
-from matplotlib import pyplot as plt
 
 def simplifyContourFurther(contour, cornerCount=4):
     """
@@ -40,7 +38,6 @@ def findDocumentContour(img):
     imgBlur = cv2.GaussianBlur(imgGray, (5,5), 0)
     #calculating threshold of an image using Otsu method
     _, threshold = cv2.threshold(imgBlur,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    # threshold = cv2.erode(threshold, np.ones((3,3), np.uint8))
 
     #detecting contours: contour - list of points that enclose an object 
     contours, _ = cv2.findContours(threshold, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
@@ -60,53 +57,33 @@ def findDocumentContour(img):
                 if len(newApproxContour) != 4:
                     continue
                 else:
-                    return (newApproxContour, threshold)
+                    return newApproxContour
                     
             elif len(approxContour) == 4:
-                return (approxContour, threshold)
+                return approxContour
             else:
                 continue
     return None
     
 def covert2Gray(img):
     imgGray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    
-    hist = cv2.calcHist([imgGray], [0], None, [256], [0, 256])
-
-    # Normalize the histogram
-    hist = hist / hist.max()
-
-    # Create a figure and plot the histogram
-    fig = plt.figure(figsize=(5,5))
-    plt.plot(hist)
-
-    # Save the figure to a file
-    plt.savefig('/server/receiptImages/histogram.png', bbox_inches='tight')
-    
-    ots, threshold = cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    
-    with open('/server/receiptImages/histogram.txt', 'w') as file:
-        file.write(str(ots))
-    
+    _, threshold = cv2.threshold(imgGray,0,255,cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     return threshold
 
 def scan(image):
     img = cv2.imread(image)
 
-    documentContour, imgThreshold = findDocumentContour(img)
-    # imgThreshold = cv2.drawContours(cv2.cvtColor(imgThreshold, cv2.COLOR_GRAY2BGR), [documentContour], -1, (0,255,0), 3)
-    
-    cv2.imwrite("/server/receiptImages/img.png", imgThreshold) #printing threshold image
+    documentContour = findDocumentContour(img)
     
     imgWarped = four_point_transform(img, documentContour.reshape(4,2))
+    # Cutting 50 pixels from the top, sometimes the image has black pixels at the top because of eg. folded receipt
+    imgWarped = imgWarped[50:imgWarped.shape[0], 0:imgWarped.shape[1]]
     
     # calculating new threshold for receipt without backround
     imgWarped = covert2Gray(imgWarped)
     
-    cv2.imwrite("/server/receiptImages/imgWar.png", imgWarped) # printing cut out image
-    
     options = "--psm 6"
-    data = pytesseract.image_to_string(imgWarped, lang='eng', config=options)
+    data = pytesseract.image_to_string(imgWarped, lang='pol', config=options)
     
     company_name = data.split("\n")[0]
     
@@ -118,11 +95,10 @@ def scan(image):
     dateRegex = r'(\b[0-9]{2}\-[0-9]{2}\-[0-9]{4}\b|\b[0-9]{4}\-[0-9]{2}\-[0-9]{2}\b)'
     date = None 
     
-    priceRegex = r'(\b[0-9]+[\,\.][0-9]{2}\b)'
+    priceRegex = r'([0-9]+[\,\.][0-9]{2})'
     items = None
 
     total_value = None
-    debug = []
     
     flag = 0 #indication of beginning and end of items on the receipt
     tmp_description = '' #will be used when description and price of an item are in the different rows
@@ -142,7 +118,6 @@ def scan(image):
             try:
                 total_value = float(re.findall(priceRegex, row)[0].replace(",", "."))
                 continue
-                # total_value = re.search(priceRegex, row).group(1)
             except Exception as e:
                 continue
             
@@ -159,23 +134,19 @@ def scan(image):
         if match and flag == 1 and 'Rabat' not in row:
             items = [] if items == None else items
             
-            # price_index = row.find(match.group())
-            
-            # description = row[:price_index]
-            description = tmp_description if tmp_description != '' else " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
+            price_index = row.find(match.group())
+            description = row[:price_index]
+            description = tmp_description if tmp_description != '' else description
+            # " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
             tmp_description = ''
-            # price = match.group().replace(',', '.')
-            temp = (re.findall(priceRegex, row)[0].replace(",", ".")) 
+            
+            temp = (re.findall(priceRegex, row)[-1].replace(",", ".")) 
             price = float(temp)
             items.append({'description': description, 'price': price})
             
         if difflib.get_close_matches('PARAGON', row.split(), n=1):
             flag = 1
             
-    # Uncomment if you want to see all of the lines and comment next context inicialization
-    #     debug.append(row)
-    # context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items, 'debug': debug}
-            
     context = {'company': company_name, 'address': address, 'date': date, 'full_price': total_value, 'items': items}
 
-    return context, imgWarped 
+    return context 

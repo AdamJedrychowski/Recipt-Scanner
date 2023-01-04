@@ -6,14 +6,24 @@ body {
 #body-container {
     margin: 0 auto;
     margin-top: 10rem;
+<<<<<<< HEAD
     background-color: palegreen;
     border-radius: 20px;
+=======
+    background-color: #007bff;
+    color: white;
+    border-radius: 20px;
+    width: 60%;
+>>>>>>> 537c77eab7585b08747784613d4f8f06d887aaff
   }
   
   #app-description {
     margin: 10%;
     text-align: justify;
+<<<<<<< HEAD
     width: 500px;
+=======
+>>>>>>> 537c77eab7585b08747784613d4f8f06d887aaff
     max-width: fit-content;
     font-size: 1.3rem;
   }
