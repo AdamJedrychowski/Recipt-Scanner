@@ -120,7 +120,7 @@ def scan(image):
     dateRegex = r'(\b[0-9]{2}\-[0-9]{2}\-[0-9]{4}\b|\b[0-9]{4}\-[0-9]{2}\-[0-9]{2}\b)'
     date = None 
     
-    priceRegex = r'(\b[0-9]+[\,\.][0-9]{2}\b)'
+    priceRegex = r'([0-9]+[\,\.][0-9]{2})'
     items = None
 
     total_value = None
@@ -161,10 +161,10 @@ def scan(image):
         if match and flag == 1 and 'Rabat' not in row:
             items = [] if items == None else items
             
-            # price_index = row.find(match.group())
-            
-            # description = row[:price_index]
-            description = tmp_description if tmp_description != '' else " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
+            price_index = row.find(match.group())
+            description = row[:price_index]
+            description = tmp_description if tmp_description != '' else description
+            # " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
             tmp_description = ''
             # price = match.group().replace(',', '.')
             temp = (re.findall(priceRegex, row)[-1].replace(",", ".")) 
