@@ -1,6 +1,11 @@
 from django.db import models
 from django.conf import settings
 
+from PIL import Image 
+from .image_processing import  findDocumentContour, covert2Gray
+from imutils.perspective import four_point_transform
+import cv2
+import numpy as np
 
 
 class Shopping(models.Model):
@@ -18,8 +23,24 @@ class Item(models.Model):
 
 
 class Receipt(models.Model):
-    #TODO
     img = models.ImageField(upload_to= "receiptImages/")
 
     def __str__(self):
         return "receiptPhoto"
+    
+    def save(self):
+        if not self.id and not self.img:
+            return 
+        
+        super(Receipt, self).save()
+
+        imagePil = Image.open(self.img)
+
+        imageCv2 = cv2.cvtColor(np.array(imagePil), cv2.COLOR_RGB2BGR)
+        documentContour = findDocumentContour(imageCv2)
+        imgWarped = four_point_transform(imageCv2, documentContour.reshape(4,2))
+        imgThreshold = covert2Gray(imgWarped)
+
+        imagePil = Image.fromarray(imgThreshold)
+        imagePil.save(self.img.path)
+        

@@ -112,8 +112,7 @@ def scan(image):
         # Searching for total value
         totalSynonyms = ["SUMA", "SUM", "TOTAL", "PRICE", "PLN", "$"]
         temp = [difflib.get_close_matches(synonym, row.upper().split(), n=1) for synonym in totalSynonyms]
-        print(row)
-        isTotal =  any(temp)
+        isTotal = any(temp)
         if (isTotal):
             try:
                 total_value = float(re.findall(priceRegex, row)[0].replace(",", "."))
