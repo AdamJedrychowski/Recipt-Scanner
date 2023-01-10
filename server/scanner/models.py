@@ -27,20 +27,3 @@ class Receipt(models.Model):
 
     def __str__(self):
         return "receiptPhoto"
-    
-    def save(self):
-        if not self.id and not self.img:
-            return 
-        
-        super(Receipt, self).save()
-
-        imagePil = Image.open(self.img)
-
-        imageCv2 = cv2.cvtColor(np.array(imagePil), cv2.COLOR_RGB2BGR)
-        documentContour = findDocumentContour(imageCv2)
-        imgWarped = four_point_transform(imageCv2, documentContour.reshape(4,2))
-        imgThreshold = covert2Gray(imgWarped)
-
-        imagePil = Image.fromarray(imgThreshold)
-        imagePil.save(self.img.path)
-        
