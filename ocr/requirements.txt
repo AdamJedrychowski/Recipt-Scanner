@@ -1,7 +1,0 @@
-imutils==0.5.4
-numpy==1.23.5
-opencv-python==4.6.0.66
-packaging==22.0
-Pillow==9.3.0
-pytesseract==0.3.10
-scipy==1.9.3
