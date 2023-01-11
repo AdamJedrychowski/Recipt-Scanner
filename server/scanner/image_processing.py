@@ -136,7 +136,6 @@ def scan(image):
             price_index = row.find(match.group())
             description = row[:price_index]
             description = tmp_description if tmp_description != '' else description
-            # " ".join(list(filter(lambda el: el.isalnum(), row.split(" "))))
             tmp_description = ''
             
             temp = (re.findall(priceRegex, row)[-1].replace(",", ".")) 
