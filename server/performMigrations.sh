@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker compose exec server python3 /server/manage.py makemigrations
+python3 manage.py makemigrations
 
-docker compose exec server python3 /server/manage.py migrate
+python3 manage.py migrate
